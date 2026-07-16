@@ -1,4 +1,4 @@
-const CACHE_NAME = 'seef-sandwich-v2'; // غير رقم الـ v1 إلى v2 أو v3 كل ما ترفع تعديل كبير لتجبر الكاش على التحديث فوراً
+const CACHE_NAME = 'seef-sandwich-v3'; // غير رقم الـ v1 إلى v2 أو v3 كل ما ترفع تعديل كبير لتجبر الكاش على التحديث فوراً
 const ASSETS_TO_CACHE = [
   'index.html',
   'manifest.json',

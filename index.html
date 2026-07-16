@@ -468,14 +468,45 @@
 
         function initPWA() {
             if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            if (isIOS && !window.navigator.standalone) document.getElementById('install-bar').style.display = 'flex';
+            
+            // تحقق مما إذا كان التطبيق مثبتًا بالفعل ومفتوحًا كـ Standalone لمنع ظهور شريط التثبيت بداخله
+            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+            if (isStandalone) {
+                document.getElementById('install-bar').style.display = 'none';
+                return;
+            }
+
+            // التحقق من نظام iOS بشكل دقيق يشمل أجهزة الآيباد الحديثة
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isIOS) {
+                document.getElementById('install-bar').style.display = 'flex';
+            }
         }
 
-        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-bar').style.display = 'flex'; });
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // إظهار شريط التثبيت المخصص فقط إذا لم يكن التطبيق مثبتًا بالفعل كـ Standalone
+            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+            if (!isStandalone) {
+                document.getElementById('install-bar').style.display = 'flex';
+            }
+        });
+
         function triggerInstall() {
-            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) document.getElementById('iosPopup').style.display = 'flex';
-            else if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isIOS) {
+                document.getElementById('iosPopup').style.display = 'flex';
+            } else if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('install-bar').style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
+            }
         }
 
         loadMenu();
