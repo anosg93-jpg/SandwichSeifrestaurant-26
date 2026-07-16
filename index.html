@@ -7,10 +7,11 @@
     
     <link rel="manifest" href="manifest.json">
     
+    <!-- وسم الأيفون والـ iOS لتشغيله كتطبيق كامل -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ساندوتش سيف">
-    <link class="ios-logo-link" rel="apple-touch-icon" href="images/logoseef.png">
+    <link class="ios-logo-link" rel="apple-touch-icon" href="images/logosief.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -22,7 +23,7 @@
             --yellow-gold: #f3a63b; 
             --address-tag: #2e7d32;
             --white: #f2f2f7; 
-            --glass: rgba(242, 242, 247, 0.8);
+            --glass: rgba(242, 242, 247, 1); /* تم تعديل الشفافية هنا لمنع ظهور الأصناف بالخلفية */
             --success-dark: #11291b; 
             --header-bg: #f2f2f7;
         }
@@ -32,7 +33,7 @@
             --main-text: #f2f2f7;
             --desc-text: #a4b3a9;
             --white: #121f17;
-            --glass: rgba(18, 31, 23, 0.8);
+            --glass: rgba(18, 31, 23, 1); /* تم تعديل الشفافية هنا للوضع المظلم لمنع ظهور الأصناف بالخلفية */
             --header-bg: #121f17;
         }
 
@@ -104,7 +105,7 @@
         .addr-tag { color: var(--yellow-gold); font-weight: 800; }
 
         /* القائمة وتوسيع المسافات بين الأقسام */
-        .category-nav { display: flex; overflow-x: auto; white-space: nowrap; padding: 15px 20px; gap: 25px; scrollbar-width: none; background: var(--glass); backdrop-filter: blur(20px); position: sticky; top: 210px; z-index: 999; border-bottom: 0.5px solid rgba(0,0,0,0.1); }
+        .category-nav { display: flex; overflow-x: auto; white-space: nowrap; padding: 15px 20px; gap: 25px; scrollbar-width: none; background: var(--glass); backdrop-filter: blur(0px); position: sticky; top: 177px; margin-top: -1px; z-index: 999; border-bottom: 0.5px solid rgba(0,0,0,0.1); box-shadow: 0 -15px 0 var(--glass); /* الظل العلوي السالب لسد الفراغ العلوي تماماً ومنع الرؤية من خلفه */ }
         .cat-item { display: flex; flex-direction: column; align-items: center; min-width: 90px; }
         .cat-img-box { width: 55px; height: 55px; border-radius: 16px; background: #e5e5ea; overflow: hidden; border: 2.5px solid transparent; transition: 0.3s; }
         .cat-img-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -191,7 +192,7 @@
 
     <div id="splash-screen">
         <div class="loader-content">
-            <img src="images/logoseef.png" class="loader-logo-big">
+            <img src="images/logosief.png" class="loader-logo-big">
             <h2 class="loader-text">ساندوتش سيف</h2>
             <p class="loader-slogan">احلي طعم 🍔🔥</p>
             <div class="loading-bar"><span></span></div>
@@ -203,7 +204,7 @@
         <div class="header-top">
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
             <div class="header-logo-container">
-                <img src="images/logoseef.png" class="header-logo">
+                <img src="images/logosief.png" class="header-logo">
             </div>
             <div class="cart-trigger-container">
                 <div class="cart-trigger" onclick="toggleCart(true)" id="cartBtn">
