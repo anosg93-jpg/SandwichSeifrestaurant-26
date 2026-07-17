@@ -477,7 +477,7 @@
             
             // إعادة حساب وتحديث النص في السلة فوراً بناء على نوع الطلب المختار
             if (selectedOrderType === 'delivery') {
-                document.getElementById('totalAmount').innerHTML = `${currentTotal} ج.م <small style="font-size: 0.72rem; font-weight: 600; opacity: 0.9;">+ تكلفه التوصيل حسب مكانك</small>`;
+                document.getElementById('totalAmount').innerHTML = `${currentTotal} ج.m <small style="font-size: 0.72rem; font-weight: 600; opacity: 0.9;">+ تكلفه التوصيل حسب مكانك</small>`;
             } else {
                 document.getElementById('totalAmount').innerText = `${currentTotal} ج.م`;
             }
@@ -551,13 +551,12 @@
         function confirmExit(agree) {
             if (agree) {
                 document.getElementById('exitConfirmModal').style.display = 'none';
-                // محاولة إغلاق النافذة برمجياً لتطبيقات الـ PWA والهواتف فوراً
-                if (window.close()) {
-                    // تم الإغلاق بنجاح
-                } else {
-                    // إذا منع المتصفح الإغلاق المباشر، نقوم بإرجاع المستخدم للخلف خطوتين في السجل للرجوع لبرنامج الهاتف الفعلي أو المتصفح الخارجي فوراً
-                    window.history.go(-2);
-                }
+                // تصفير وتنظيف حالة الـ state الوهمية التي تم دفعها لمنع تعليق التطبيق فوراً
+                window.history.go(-2);
+                // محاولة الإغلاق النهائي المباشر للتطبيق
+                setTimeout(() => {
+                    window.close();
+                }, 50);
             } else {
                 // إلغاء عملية الخروج وإبقاء المستخدم في التطبيق بسلاسة
                 document.getElementById('exitConfirmModal').style.display = 'none';
