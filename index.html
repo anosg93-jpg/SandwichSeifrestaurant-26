@@ -550,9 +550,14 @@
 
         function confirmExit(agree) {
             if (agree) {
-                // إخفاء المودال والسماح بالرجوع الفعلي المزدوج لغلق التبويب أو الخروج من الصفحة
                 document.getElementById('exitConfirmModal').style.display = 'none';
-                window.history.go(-2); 
+                // تجربة إغلاق النافذة برمجياً بأسرع طريقة
+                if (window.close()) {
+                    // تم الإغلاق بنجاح
+                } else {
+                    // إذا منع المتصفح الإغلاق، نقوم بتوجيه المستخدم فوراً لصفحة فارغة للخروج الكامل من بيئة الموقع
+                    window.location.replace("about:blank");
+                }
             } else {
                 // إلغاء عملية الخروج وإبقاء المستخدم في التطبيق بسلاسة
                 document.getElementById('exitConfirmModal').style.display = 'none';
