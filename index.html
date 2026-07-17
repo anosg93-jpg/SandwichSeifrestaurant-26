@@ -178,7 +178,7 @@
         .cart-item-price { color: var(--yellow-gold); font-weight: 800; font-size: 0.85rem; display: block; }
         .remove-btn { color: #ff3b30; font-weight: 800; font-size: 0.75rem; cursor: pointer; }
 
-        /* تصميم خيارات الاستلام */
+        /* تصميم خيارات الاستلاف */
         .order-type-container { display: flex; background: rgba(0,0,0,0.04); padding: 6px; border-radius: 16px; margin: 15px 0; gap: 6px; }
         .order-type-btn { flex: 1; border: none; background: transparent; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--desc-text); transition: all 0.3s ease; }
         .order-type-btn.active { background: var(--accent); color: white; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2); }
@@ -369,7 +369,7 @@
         function filterCat(cat, el) {
             if(el) { document.querySelectorAll('.cat-item').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
             document.getElementById('menuList').innerHTML = menuData.filter(i => i.category === cat).map(item => {
-                let defaultType = item.priceNormal ? 'عادي' : item.priceFino ? 'فينو' : item.priceBaladi ? 'بلدي' : 'فرنساوي';
+                let defaultType = item.priceNormal ? '⭐' : item.priceFino ? 'فينو' : item.priceBaladi ? 'بلدي' : 'فرنساوي';
                 let defaultPrice = item.priceNormal || item.priceFino || item.priceBaladi || item.priceFrench || '0';
                 let displayPrice = (defaultPrice === "حسب اليوم") ? "حسب اليوم" : `${defaultPrice} ج.م`;
                 return `
@@ -381,7 +381,7 @@
                             <span class="food-price">${displayPrice}</span>
                         </div>
                         <div class="sizes-row" style="display: flex; gap: 8px; margin-top: 10px; margin-bottom: 12px;">
-                            ${item.priceNormal ? `<button class="size-btn ${defaultType === 'عادي' ? 'active' : ''}" onclick="selectType(this, '${item.priceNormal}', 'عادي')">عادي</button>` : ''}
+                            ${item.priceNormal ? `<button class="size-btn ${defaultType === '⭐' ? 'active' : ''}" onclick="selectType(this, '${item.priceNormal}', '⭐')">⭐</button>` : ''}
                             ${item.priceFino ? `<button class="size-btn ${defaultType === 'فينو' ? 'active' : ''}" onclick="selectType(this, '${item.priceFino}', 'فينو')">فينو</button>` : ''}
                             ${item.priceBaladi ? `<button class="size-btn ${defaultType === 'بلدي' ? 'active' : ''}" onclick="selectType(this, '${item.priceBaladi}', 'بلدي')">بلدي</button>` : ''}
                             ${item.priceFrench ? `<button class="size-btn ${defaultType === 'فرنساوي' ? 'active' : ''}" onclick="selectType(this, '${item.priceFrench}', 'فرنساوي')">فرنساوي</button>` : ''}
@@ -462,7 +462,7 @@
             const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddr').value;
             if (!n || !p || cart.length === 0) return alert("يرجى إكمال البيانات واختيار الأصناف");
             if (selectedOrderType === 'delivery' && !a) return alert("يرجى إدخال العنوان");
-            let msg = `✨ طلب جديد: \nالاسم: ${n}\nالهاتف: ${p}\nالنوع: ${selectedOrderType === 'delivery' ? 'دليفري' : 'تيك اواي'}\n${selectedOrderType === 'delivery' ? 'العنوان: ' + a + '\n' : ''}\nالطلبات:\n` + cart.map((i, idx) => `${idx + 1}. ${i.name} (${i.price} ج.م)`).join('\n') + `\n\nالإجمالي: ${currentTotal} ج.م`;
+            let msg = `طلب جديد من ساندوتش سيف \n\n✨ تفاصيل الطلب: \nالاسم: ${n}\nالهاتف: ${p}\nالنوع: ${selectedOrderType === 'delivery' ? 'دليفري' : 'تيك اواي'}\n${selectedOrderType === 'delivery' ? 'العنوان: ' + a + '\n' : ''}\nالطلبات:\n` + cart.map((i, idx) => `${idx + 1}. ${i.name} (${i.price} ج.م)`).join('\n') + `\n\nالإجمالي: ${currentTotal} ج.م + تكلفة التوصيل حسب مكانك\n\nشكراً لطلبكم من ساندوتش سيف`;
             window.open(`https://wa.me/201026274143?text=${encodeURIComponent(msg)}`);
         }
 
@@ -508,6 +508,14 @@
                 });
             }
         }
+
+        // تنبيه المستخدم قبل الخروج ومغادرة الأبلكيشن
+        window.addEventListener('beforeunload', function (e) {
+            e.preventDefault();
+            const message = 'هل انت متاكد من مغادرة ابلكيشن سندوتش سيف؟';
+            e.returnValue = message;
+            return message;
+        });
 
         loadMenu();
     </script>
