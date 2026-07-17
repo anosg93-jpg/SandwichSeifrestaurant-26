@@ -293,6 +293,18 @@
         </div>
     </div>
 
+    <!-- نافذة التنبيه المخصصة والذكية عند محاولة الخروج بالخطأ -->
+    <div id="exitConfirmModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 20px;" onclick="if(event.target==this) confirmExit(false)">
+        <div style="background: var(--white); color: var(--main-text); padding: 25px; border-radius: 24px; text-align: center; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">
+            <h3 style="margin-bottom: 12px; font-size: 1.1rem; color: #ff3b30; font-weight: 800;">⚠️ تنبيه مغادرة</h3>
+            <p style="font-size: 0.9rem; margin-bottom: 20px; font-weight: 700; line-height: 1.5;">هل أنت متأكد من مغادرة أبلكيشن مطعم سيف؟</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="confirmExit(true)" style="background: #ff3b30; color: white; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 800; flex: 1;">نعم، خروج</button>
+                <button onclick="confirmExit(false)" style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 800; flex: 1;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTWXN5U09pTs00fqV-66xRKkNB47ILSUcXLDz8HCKNDioCA-9n_RlnwlUGvMhO8N8aUYEaIaWLFSP-1/pub?output=csv';
         const IMAGES_PATH = "./images/"; 
@@ -526,10 +538,26 @@
             }
         }
 
-        // التعديل الخاص بالتنبيه عند الخروج
-        window.onbeforeunload = function() {
-            return "هل انت متأكد من مغادرة ابلكيشن ساندوتش سيف";
-        };
+        // --- التعديل المطور لمنع الخروج المفاجئ والتلاعب بسجل التصفح ---
+        history.pushState(null, null, window.location.href);
+
+        window.addEventListener('popstate', function (event) {
+            // إظهار نافذة التنبيه المخصصة فوراً عند الضغط على زر الرجوع بالمتصفح أو الهاتف
+            document.getElementById('exitConfirmModal').style.display = 'flex';
+            // إعادة دفع الحالة الحالية لمنع التنقل الفعلي للخلف حتى يتخذ المستخدم قراراً
+            history.pushState(null, null, window.location.href);
+        });
+
+        function confirmExit(agree) {
+            if (agree) {
+                // إخفاء المودال والسماح بالرجوع الفعلي المزدوج لغلق التبويب أو الخروج من الصفحة
+                document.getElementById('exitConfirmModal').style.display = 'none';
+                window.history.go(-2); 
+            } else {
+                // إلغاء عملية الخروج وإبقاء المستخدم في التطبيق بسلاسة
+                document.getElementById('exitConfirmModal').style.display = 'none';
+            }
+        }
 
         loadMenu();
     </script>
