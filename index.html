@@ -540,16 +540,16 @@
             }
         }
 
-        // --- التحديث الاحترافي لحركة الرجوع الذكي والضغط المزدوج للخروج ---
+        // --- التحديث الاحترافي لحركة الرجوع الذكي والضغط المزدوج للخروج الفعلي ---
         history.pushState({state: 'home'}, null, window.location.href);
 
         window.addEventListener('popstate', function (event) {
             if (cartOpen) {
-                // إذا كانت السلة مفتوحة، نقوم بإغلاقها فقط ونبقى في التطبيق
+                // إذا كانت السلة مفتوحة، نقوم بإغلاقها بسلاسة ونبقى داخل التطبيق
                 const modal = document.getElementById('cartModal'); 
                 modal.style.display = 'none'; 
                 cartOpen = false;
-                // إعادة تهيئة حالة الصفحة الرئيسية للتراجع التالي
+                // إعادة كتابة الحالة لضمان عمل زر الرجوع بالشكل الصحيح في المرة التالية
                 history.pushState({state: 'home'}, null, window.location.href);
                 return;
             }
@@ -557,15 +557,12 @@
             // إذا كان المستخدم في الصفحة الرئيسية وضغط على زر الرجوع
             const currentTime = new Date().getTime();
             if (currentTime - lastBackPressTime < 2000) {
-                // الخروج الفوري عند الضغط المزدوج خلال ثانيتين
+                // الخروج الفعلي بالرجوع لصفحتين في الـ history لكسر الحاجز والوصول للخارج
                 window.history.go(-2);
-                setTimeout(() => {
-                    window.close();
-                }, 50);
             } else {
                 lastBackPressTime = currentTime;
                 showToast("اضغط مرة أخرى للخروج");
-                // إعادة تثبيت حالة التراجع لمنعه من الخروج المفاجئ في المرة الأولى
+                // إعادة تثبيت حالة التراجع لمنعه من الخروج المفاجئ من التطبيق بالكامل في الضغطة الأولى
                 history.pushState({state: 'home'}, null, window.location.href);
             }
         });
