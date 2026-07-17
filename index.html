@@ -445,7 +445,13 @@
                 currentTotal += parseFloat(item.price) || 0;
                 return `<div class="cart-item-card"><img src="${item.img}" class="cart-item-img" onerror="this.src='${IMAGES_PATH}default.jpg'"><div class="cart-item-info"><span class="cart-item-name">${item.name}</span><span class="cart-item-price">${item.price} ج.م</span></div><span class="remove-btn" onclick="removeFromCart(${idx})">حذف</span></div>`;
             }).join('');
-            document.getElementById('totalAmount').innerText = `${currentTotal} ج.م`;
+            
+            // تحديث السعر الإجمالي مع التفرقة بين الدليفري والتيك اواي وتصغير نص التوصيل
+            if (selectedOrderType === 'delivery') {
+                document.getElementById('totalAmount').innerHTML = `${currentTotal} ج.م <small style="font-size: 0.72rem; font-weight: 600; opacity: 0.9;">+ تكلفه التوصيل حسب مكانك</small>`;
+            } else {
+                document.getElementById('totalAmount').innerText = `${currentTotal} ج.م`;
+            }
         }
 
         function removeFromCart(idx) { cart.splice(idx, 1); updateCart(); if(cart.length === 0) toggleCart(false); }
@@ -456,13 +462,24 @@
             document.getElementById('deliveryBtn').classList.toggle('active', type === 'delivery');
             document.getElementById('takeawayBtn').classList.toggle('active', type === 'takeaway');
             document.getElementById('uAddr').style.display = (type === 'delivery') ? 'block' : 'none';
+            
+            // إعادة حساب وتحديث النص في السلة فوراً بناء على نوع الطلب المختار
+            if (selectedOrderType === 'delivery') {
+                document.getElementById('totalAmount').innerHTML = `${currentTotal} ج.م <small style="font-size: 0.72rem; font-weight: 600; opacity: 0.9;">+ تكلفه التوصيل حسب مكانك</small>`;
+            } else {
+                document.getElementById('totalAmount').innerText = `${currentTotal} ج.م`;
+            }
         }
 
         function sendToWA() {
             const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddr').value;
             if (!n || !p || cart.length === 0) return alert("يرجى إكمال البيانات واختيار الأصناف");
             if (selectedOrderType === 'delivery' && !a) return alert("يرجى إدخال العنوان");
-            let msg = `طلب جديد من ساندوتش سيف \n\n✨ تفاصيل الطلب: \nالاسم: ${n}\nالهاتف: ${p}\nالنوع: ${selectedOrderType === 'delivery' ? 'دليفري' : 'تيك اواي'}\n${selectedOrderType === 'delivery' ? 'العنوان: ' + a + '\n' : ''}\nالطلبات:\n` + cart.map((i, idx) => `${idx + 1}. ${i.name} (${i.price} ج.م)`).join('\n') + `\n\nالإجمالي: ${currentTotal} ج.م + تكلفة التوصيل حسب مكانك\n\nشكراً لطلبكم من ساندوتش سيف`;
+            
+            // تخصيص نص السعر بناء على نوع الطلب
+            let totalText = selectedOrderType === 'delivery' ? `${currentTotal} ج.م + تكلفه التوصيل حسب مكانك` : `${currentTotal} ج.م`;
+            
+            let msg = `طلب جديد من ساندوتش سيف \n\n✨ تفاصيل الطلب: \nالاسم: ${n}\nالهاتف: ${p}\nالنوع: ${selectedOrderType === 'delivery' ? 'دليفري' : 'تيك اواي'}\n${selectedOrderType === 'delivery' ? 'العنوان: ' + a + '\n' : ''}\nالطلبات:\n` + cart.map((i, idx) => `${idx + 1}. ${i.name} (${i.price} ج.م)`).join('\n') + `\n\nالإجمالي: ${totalText}\n\nشكراً لطلبكم من ساندوتش سيف`;
             window.open(`https://wa.me/201026274143?text=${encodeURIComponent(msg)}`);
         }
 
@@ -512,7 +529,7 @@
         // تنبيه المستخدم قبل الخروج ومغادرة الأبلكيشن
         window.addEventListener('beforeunload', function (e) {
             e.preventDefault();
-            const message = 'هل انت متاكد من مغادرة ابلكيشن سندوتش سيف؟';
+            const message = 'هل انت متأكد من مغادرة ابلكيشن ساندوتش سيف؟';
             e.returnValue = message;
             return message;
         });
