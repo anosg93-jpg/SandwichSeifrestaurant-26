@@ -529,7 +529,7 @@
         // تنبيه المستخدم قبل الخروج ومغادرة الأبلكيشن
         window.addEventListener('beforeunload', function (e) {
             e.preventDefault();
-            const message = 'هل انت متأكد من مغادرة ابلكيشن ساندوتش سيف؟';
+            const message = 'هل انت متأكد من مغادرة ابلكيشن ساندوتش سيف';
             e.returnValue = message;
             return message;
         });
